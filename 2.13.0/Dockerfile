@@ -5,6 +5,7 @@ RUN apk add --update --no-cache --virtual .build-deps build-base git \
       && make libjsonnet.so \
       && mkdir -p /opt/jsonnet \
       && cp libjsonnet.so /opt/jsonnet/libjsonnet.so \
+      && cp libjsonnet.so.0 /opt/jsonnet/libjsonnet.so.0 \
       && cp include/libjsonnet.h /opt/jsonnet/libjsonnet.h \
       && cd .. \
       && rm -rf jsonnet \
@@ -12,6 +13,7 @@ RUN apk add --update --no-cache --virtual .build-deps build-base git \
 
 FROM ruby:2.5-alpine3.8
 COPY --from=builder /opt/jsonnet/libjsonnet.so /usr/local/lib/libjsonnet.so
+COPY --from=builder /opt/jsonnet/libjsonnet.so.0 /usr/local/lib/libjsonnet.so.0
 COPY --from=builder /opt/jsonnet/libjsonnet.h /usr/local/include/libjsonnet.h
 
 ENV HAKO_VERSION=2.13.0
